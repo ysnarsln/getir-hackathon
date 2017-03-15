@@ -1,8 +1,10 @@
 package com.getirhackathon.preselection.fragments;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -55,13 +57,14 @@ public class VolleyFragment extends Fragment {
 
         final FrameLayout frameLayout = (FrameLayout) view.findViewById(R.id.fl_main);
 
-            mVolley.postRequest(new GetirRequest(), new VolleyResponse() {
-                @Override
-                public void onSuccess(GetirResponse getirResponse) {
+        mVolley.postRequest(new GetirRequest(), new VolleyResponse() {
+            @Override
+            public void onSuccess(GetirResponse getirResponse) {
 //                    Log.d(TAG, "onSuccess: " + elementList.get(0).getType());
 
-                    CustomView customView;
-                    List<Element> elementList = getirResponse.getElements();
+                CustomView customView;
+                List<Element> elementList = getirResponse.getElements();
+                if (elementList != null) {
                     for (Element item : elementList) {
 
                         //it causes null reference object error. you have to check it null or not
@@ -69,15 +72,27 @@ public class VolleyFragment extends Fragment {
                             customView = new CustomView(mContext, item);
                             frameLayout.addView(customView);
                         }
+
                     }
-
                 }
 
-                @Override
-                public void onError(String errorMessage) {
-                    Log.d(TAG, "onError: " + errorMessage);
-                }
-            });
+            }
+
+            @Override
+            public void onError(String reason, String errorMessage) {
+                Log.d(TAG, "onError: " + errorMessage);
+                new AlertDialog.Builder(getContext())
+                        .setTitle(reason)
+                        .setMessage(errorMessage)
+                        .setNeutralButton(mContext.getString(R.string.error_msg_btn_txt), new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                dialogInterface.dismiss();
+                            }
+                        })
+                        .show();
+            }
+        });
 
         return view;
     }

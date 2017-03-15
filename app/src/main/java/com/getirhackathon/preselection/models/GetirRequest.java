@@ -1,6 +1,9 @@
 package com.getirhackathon.preselection.models;
 
 import com.google.gson.annotations.SerializedName;
+import com.google.gson.reflect.TypeToken;
+
+import java.lang.reflect.Type;
 
 public class GetirRequest {
     @SerializedName("email")
@@ -38,6 +41,11 @@ public class GetirRequest {
 
     public void setGsm(String gsm) {
         this.gsm = gsm;
+    }
+
+    public Type getResponseType() {
+        return new TypeToken <GetirResponse>() {
+        }.getType();
     }
 
 }

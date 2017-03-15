@@ -4,5 +4,6 @@ import com.getirhackathon.preselection.models.GetirResponse;
 
 public interface VolleyResponse {
     void onSuccess(GetirResponse response);
-    void onError(String errorMessage);
+
+    void onError(String reason, String errorMessage);
 }
