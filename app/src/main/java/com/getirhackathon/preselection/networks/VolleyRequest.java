@@ -14,6 +14,7 @@ import com.getirhackathon.preselection.interfaces.VolleyResponse;
 import com.getirhackathon.preselection.models.GetirRequest;
 import com.getirhackathon.preselection.models.GetirResponse;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -38,29 +39,33 @@ public class VolleyRequest {
     }
 
     public void postRequest(final GetirRequest getirRequest, final VolleyResponse volleyResponse) {
-        try {
+        try{
             String tempJson = gson.toJson(getirRequest);
             JSONObject jsonObject = new JSONObject(tempJson);
-            JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, BuildConfig.MAINURL, jsonObject, new Response.Listener<JSONObject>() {
-                @Override
-                public void onResponse(JSONObject response) {
-                    Log.d(TAG, "onResponse: " + response.toString());
-                    volleyResponse.onSuccess(gson.fromJson(response.toString(), GetirResponse.class));
-
-                }
-            }, new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    Log.d(TAG, "onErrorResponse: " + error.getMessage());
-                    volleyResponse.onError(error.getMessage());
-                }
-            });
-            requestQueue.add(jsonObjectRequest);
-
+            GsonPostRequest gsonPostRequest = new GsonPostRequest(
+                    BuildConfig.MAINURL,
+                    jsonObject.toString(),
+                    new TypeToken<GetirResponse>() {}.getType(),
+                    gson,
+                    new Response.Listener() {
+                        @Override
+                        public void onResponse(Object response) {
+                            Log.d(TAG, "onResponse: "+response.toString());
+                            volleyResponse.onSuccess((GetirResponse)response);
+                        }
+                    },
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            Log.d(TAG, "onErrorResponse: "+error.getMessage());
+                            volleyResponse.onError(error.getMessage());
+                        }
+                    }
+            );
+            requestQueue.add(gsonPostRequest);
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
     }
 
 }
