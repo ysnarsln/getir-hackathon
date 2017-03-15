@@ -29,14 +29,14 @@ public class CustomView extends View {
 
         if (mElement.getType().equals(Constants.TYPE_CIRCLE)) {
 
-            canvas.drawCircle(mElement.getxPosition(), mElement.getyPosition(),
+            canvas.drawCircle(100+mElement.getxPosition(), 100+mElement.getyPosition(),
                     mElement.getR(), mPaint);
 
         } else if (mElement.getType().equals(Constants.TYPE_RECTANGLE)) {
 
-            canvas.drawRect(mElement.getxPosition(), mElement.getyPosition(),
-                    mElement.getxPosition() + mElement.getWidth(),
-                    mElement.getyPosition() + mElement.getHeight(), mPaint);
+            canvas.drawRect(100+mElement.getxPosition(), 100+mElement.getyPosition(),
+                    100+mElement.getxPosition() + mElement.getWidth(),
+                    100+mElement.getyPosition() + mElement.getHeight(), mPaint);
 
         }
 
