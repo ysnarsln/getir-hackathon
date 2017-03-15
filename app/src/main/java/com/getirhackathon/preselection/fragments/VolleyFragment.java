@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.ContentLoadingProgressBar;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -13,7 +14,7 @@ import android.widget.FrameLayout;
 
 import com.getirhackathon.preselection.R;
 import com.getirhackathon.preselection.activities.MainActivity;
-import com.getirhackathon.preselection.interfaces.VolleyResponse;
+import com.getirhackathon.preselection.interfaces.VolleyInteractions;
 import com.getirhackathon.preselection.models.Element;
 import com.getirhackathon.preselection.models.GetirRequest;
 import com.getirhackathon.preselection.models.GetirResponse;
@@ -30,6 +31,7 @@ public class VolleyFragment extends Fragment {
     private Context mContext;
     private VolleyRequest mVolley;
     private Gson gson;
+    private ContentLoadingProgressBar mContentLoadingProgressBar;
 
     public VolleyFragment() {
         // Required empty public constructor
@@ -54,10 +56,10 @@ public class VolleyFragment extends Fragment {
                              Bundle savedInstanceState) {
         Log.d(TAG, "Hello its VolleyRequest Fragment");
         View view = inflater.inflate(R.layout.fragment_volley, container, false);
-
+        mContentLoadingProgressBar = (ContentLoadingProgressBar) view.findViewById(R.id.clpLoading);
         final FrameLayout frameLayout = (FrameLayout) view.findViewById(R.id.fl_main);
 
-        mVolley.postRequest(new GetirRequest(), new VolleyResponse() {
+        mVolley.postRequest(new GetirRequest(), new VolleyInteractions() {
             @Override
             public void onSuccess(GetirResponse getirResponse) {
 //                    Log.d(TAG, "onSuccess: " + elementList.get(0).getType());
@@ -81,6 +83,7 @@ public class VolleyFragment extends Fragment {
             @Override
             public void onError(String reason, String errorMessage) {
                 Log.d(TAG, "onError: " + errorMessage);
+                if (getContext()==null || !isAdded()) return;
                 new AlertDialog.Builder(getContext())
                         .setTitle(reason)
                         .setMessage(errorMessage)
@@ -91,6 +94,17 @@ public class VolleyFragment extends Fragment {
                             }
                         })
                         .show();
+            }
+
+            @Override
+            public void onBeforeRequest() {
+                mContentLoadingProgressBar.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onAfterRequest() {
+                mContentLoadingProgressBar.setVisibility(View.INVISIBLE);
+
             }
         });
 

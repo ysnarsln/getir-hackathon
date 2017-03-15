@@ -15,7 +15,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
 import com.getirhackathon.preselection.BuildConfig;
 import com.getirhackathon.preselection.R;
-import com.getirhackathon.preselection.interfaces.VolleyResponse;
+import com.getirhackathon.preselection.interfaces.VolleyInteractions;
 import com.getirhackathon.preselection.models.GetirRequest;
 import com.getirhackathon.preselection.models.GetirResponse;
 import com.google.gson.Gson;
@@ -44,7 +44,8 @@ public class VolleyRequest {
         return mVolley;
     }
 
-    public void postRequest(final GetirRequest getirRequest, final VolleyResponse volleyResponse) {
+    public void postRequest(final GetirRequest getirRequest, final VolleyInteractions volleyInteractions) {
+        volleyInteractions.onBeforeRequest();
         try {
             String tempJson = gson.toJson(getirRequest);
             JSONObject jsonObject = new JSONObject(tempJson);
@@ -60,9 +61,11 @@ public class VolleyRequest {
                             Log.d(TAG, "onResponse: " + response.toString());
                             GetirResponse getirResponse = (GetirResponse) response;
                             if (getirResponse.getCode() == 0) {
-                                volleyResponse.onSuccess(getirResponse);
+                                volleyInteractions.onSuccess(getirResponse);
+                                volleyInteractions.onAfterRequest();
                             } else {
-                                volleyResponse.onError(mContext.getString(R.string.error_msg_general_title), getirResponse.getMsg());
+                                volleyInteractions.onError(mContext.getString(R.string.error_msg_general_title), getirResponse.getMsg());
+                                volleyInteractions.onAfterRequest();
                             }
                         }
                     },
@@ -71,19 +74,19 @@ public class VolleyRequest {
                         public void onErrorResponse(VolleyError error) {
                             Log.d(TAG, "onErrorResponse: " + error.getMessage());
                             if (error instanceof TimeoutError || error instanceof NoConnectionError) {
-                                volleyResponse.onError(mContext.getString(R.string.error_msg_timeout), mContext.getString(R.string.error_msg_reason) + error.getMessage());
+                                volleyInteractions.onError(mContext.getString(R.string.error_msg_timeout), mContext.getString(R.string.error_msg_reason) + error.getMessage());
                             } else if (error instanceof AuthFailureError) {
-                                volleyResponse.onError(mContext.getString(R.string.error_msg_auth_failure), mContext.getString(R.string.error_msg_reason) + error.getMessage());
+                                volleyInteractions.onError(mContext.getString(R.string.error_msg_auth_failure), mContext.getString(R.string.error_msg_reason) + error.getMessage());
                             } else if (error instanceof ServerError) {
-                                volleyResponse.onError(mContext.getString(R.string.error_msg_server), mContext.getString(R.string.error_msg_reason) + error.getMessage());
+                                volleyInteractions.onError(mContext.getString(R.string.error_msg_server), mContext.getString(R.string.error_msg_reason) + error.getMessage());
                             } else if (error instanceof NetworkError) {
-                                volleyResponse.onError(mContext.getString(R.string.error_msg_network), mContext.getString(R.string.error_msg_reason) + error.getMessage());
+                                volleyInteractions.onError(mContext.getString(R.string.error_msg_network), mContext.getString(R.string.error_msg_reason) + error.getMessage());
                             } else if (error instanceof ParseError) {
-                                volleyResponse.onError(mContext.getString(R.string.error_msg_parse), mContext.getString(R.string.error_msg_reason) + error.getMessage());
+                                volleyInteractions.onError(mContext.getString(R.string.error_msg_parse), mContext.getString(R.string.error_msg_reason) + error.getMessage());
                             } else {
-                                volleyResponse.onError(mContext.getString(R.string.error_msg_general_title), mContext.getString(R.string.error_msg_reason) + error.getMessage());
+                                volleyInteractions.onError(mContext.getString(R.string.error_msg_general_title), mContext.getString(R.string.error_msg_reason) + error.getMessage());
                             }
-
+                            volleyInteractions.onAfterRequest();
 
                         }
                     }
