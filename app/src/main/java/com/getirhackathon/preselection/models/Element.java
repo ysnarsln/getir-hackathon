@@ -1,6 +1,6 @@
 package com.getirhackathon.preselection.models;
 
-public class ShapeProperties {
+public class Element {
 
     private String type, color;
     private int xPosition, yPosition, r, width, height;

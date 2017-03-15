@@ -12,18 +12,16 @@ import android.widget.FrameLayout;
 import com.getirhackathon.preselection.R;
 import com.getirhackathon.preselection.activities.MainActivity;
 import com.getirhackathon.preselection.interfaces.VolleyResponse;
-import com.getirhackathon.preselection.models.RequestParameters;
-import com.getirhackathon.preselection.models.ShapeProperties;
+import com.getirhackathon.preselection.models.Element;
+import com.getirhackathon.preselection.models.GetirRequest;
+import com.getirhackathon.preselection.models.GetirResponse;
 import com.getirhackathon.preselection.networks.VolleyRequest;
 import com.getirhackathon.preselection.utils.CustomView;
 import com.google.gson.Gson;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.util.List;
 
-public class VolleyFragment extends Fragment{
+public class VolleyFragment extends Fragment {
 
     private String TAG = VolleyFragment.class.getName();
 
@@ -57,21 +55,17 @@ public class VolleyFragment extends Fragment{
 
         final FrameLayout frameLayout = (FrameLayout) view.findViewById(R.id.fl_main);
 
-        JSONObject jsonObject = null;
-        try {
-            String tempJson = gson.toJson(new RequestParameters());
-            jsonObject = new JSONObject(tempJson);
-
-            mVolley.Request(jsonObject, new VolleyResponse() {
+            mVolley.postRequest(new GetirRequest(), new VolleyResponse() {
                 @Override
-                public void onSuccess(List<ShapeProperties> shapePropertiesList) {
-                    Log.d(TAG, "onSuccess: "+shapePropertiesList.get(0).getType());
+                public void onSuccess(GetirResponse getirResponse) {
+//                    Log.d(TAG, "onSuccess: " + elementList.get(0).getType());
 
                     CustomView customView;
-                    for(ShapeProperties item : shapePropertiesList){
+                    List<Element> elementList = getirResponse.getElements();
+                    for (Element item : elementList) {
 
                         //it causes null reference object error. you have to check it null or not
-                        if (mContext != null){
+                        if (mContext != null) {
                             customView = new CustomView(mContext, item);
                             frameLayout.addView(customView);
                         }
@@ -81,13 +75,9 @@ public class VolleyFragment extends Fragment{
 
                 @Override
                 public void onError(String errorMessage) {
-                    Log.d(TAG, "onError: "+errorMessage);
+                    Log.d(TAG, "onError: " + errorMessage);
                 }
             });
-
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
 
         return view;
     }

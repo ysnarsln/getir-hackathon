@@ -1,10 +1,16 @@
 package com.getirhackathon.preselection.models;
 
-public class RequestParameters {
+import com.google.gson.annotations.SerializedName;
 
-    private String email, name, gsm;
+public class GetirRequest {
+    @SerializedName("email")
+    private String email;
+    @SerializedName("name")
+    private String name;
+    @SerializedName("gsm")
+    private String gsm;
 
-    public RequestParameters() {
+    public GetirRequest() {
         this.email = "test@test.com";
         this.name = "test";
         this.gsm = "+900000000000";
@@ -33,4 +39,5 @@ public class RequestParameters {
     public void setGsm(String gsm) {
         this.gsm = gsm;
     }
+
 }

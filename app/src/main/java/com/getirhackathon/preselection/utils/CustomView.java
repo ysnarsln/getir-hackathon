@@ -6,37 +6,37 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.view.View;
 
-import com.getirhackathon.preselection.models.ShapeProperties;
+import com.getirhackathon.preselection.models.Element;
 
 public class CustomView extends View {
 
-    private ShapeProperties shapeProperties;
+    private Element mElement;
     private Paint mPaint;
     private Context mContext;
 
-    public CustomView(Context context, ShapeProperties shapeProperties) {
+    public CustomView(Context context, Element element) {
         super(context);
         this.mContext = context;
-        this.shapeProperties = shapeProperties;
+        this.mElement = element;
 
         if (mPaint == null)
             mPaint = new Paint();
-        mPaint.setColor(Color.parseColor("#"+shapeProperties.getColor()));
+        mPaint.setColor(Color.parseColor("#"+ element.getColor()));
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
 
-        if (shapeProperties.getType().equals(Constants.TYPE_CIRCLE)) {
+        if (mElement.getType().equals(Constants.TYPE_CIRCLE)) {
 
-            canvas.drawCircle(shapeProperties.getxPosition(), shapeProperties.getyPosition(),
-                    shapeProperties.getR(), mPaint);
+            canvas.drawCircle(mElement.getxPosition(), mElement.getyPosition(),
+                    mElement.getR(), mPaint);
 
-        } else if (shapeProperties.getType().equals(Constants.TYPE_RECTANGLE)) {
+        } else if (mElement.getType().equals(Constants.TYPE_RECTANGLE)) {
 
-            canvas.drawRect(shapeProperties.getxPosition(), shapeProperties.getyPosition(),
-                    shapeProperties.getxPosition() + shapeProperties.getWidth(),
-                    shapeProperties.getyPosition() + shapeProperties.getHeight(), mPaint);
+            canvas.drawRect(mElement.getxPosition(), mElement.getyPosition(),
+                    mElement.getxPosition() + mElement.getWidth(),
+                    mElement.getyPosition() + mElement.getHeight(), mPaint);
 
         }
 
