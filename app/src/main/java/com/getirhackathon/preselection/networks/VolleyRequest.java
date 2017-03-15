@@ -62,11 +62,10 @@ public class VolleyRequest {
                             GetirResponse getirResponse = (GetirResponse) response;
                             if (getirResponse.getCode() == 0) {
                                 volleyInteractions.onSuccess(getirResponse);
-                                volleyInteractions.onAfterRequest();
                             } else {
                                 volleyInteractions.onError(mContext.getString(R.string.error_msg_general_title), getirResponse.getMsg());
-                                volleyInteractions.onAfterRequest();
                             }
+                            volleyInteractions.onAfterRequest();
                         }
                     },
                     new Response.ErrorListener() {

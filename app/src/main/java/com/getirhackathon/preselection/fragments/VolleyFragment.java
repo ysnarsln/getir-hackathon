@@ -28,7 +28,6 @@ public class VolleyFragment extends Fragment {
 
     private String TAG = VolleyFragment.class.getName();
 
-    private Context mContext;
     private VolleyRequest mVolley;
     private Gson gson;
     private ContentLoadingProgressBar mContentLoadingProgressBar;
@@ -41,11 +40,8 @@ public class VolleyFragment extends Fragment {
     public void onAttach(Context context) {
         super.onAttach(context);
 
-        if (context != null && context instanceof MainActivity)
-            this.mContext = context;
-
         if (mVolley == null)
-            mVolley = VolleyRequest.getInstance(mContext);
+            mVolley = VolleyRequest.getInstance(getContext());
 
         if (gson == null)
             gson = new Gson();
@@ -62,7 +58,7 @@ public class VolleyFragment extends Fragment {
         mVolley.postRequest(new GetirRequest(), new VolleyInteractions() {
             @Override
             public void onSuccess(GetirResponse getirResponse) {
-//                    Log.d(TAG, "onSuccess: " + elementList.get(0).getType());
+                //Log.d(TAG, "onSuccess: " + elementList.get(0).getType());
 
                 CustomView customView;
                 List<Element> elementList = getirResponse.getElements();
@@ -70,10 +66,9 @@ public class VolleyFragment extends Fragment {
                     for (Element item : elementList) {
 
                         //it causes null reference object error. you have to check it null or not
-                        if (mContext != null) {
-                            customView = new CustomView(mContext, item);
-                            frameLayout.addView(customView);
-                        }
+                        if (getContext() == null || !isAdded()) return;
+                        customView = new CustomView(getContext(), item);
+                        frameLayout.addView(customView);
 
                     }
                 }
@@ -83,11 +78,11 @@ public class VolleyFragment extends Fragment {
             @Override
             public void onError(String reason, String errorMessage) {
                 Log.d(TAG, "onError: " + errorMessage);
-                if (getContext()==null || !isAdded()) return;
+                if (getContext() == null || !isAdded()) return;
                 new AlertDialog.Builder(getContext())
                         .setTitle(reason)
                         .setMessage(errorMessage)
-                        .setNeutralButton(mContext.getString(R.string.error_msg_btn_txt), new DialogInterface.OnClickListener() {
+                        .setNeutralButton(getContext().getString(R.string.error_msg_btn_txt), new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
                                 dialogInterface.dismiss();
@@ -114,7 +109,6 @@ public class VolleyFragment extends Fragment {
     @Override
     public void onDetach() {
         super.onDetach();
-        this.mContext = null;
     }
 
 }
