@@ -16,7 +16,6 @@ import com.getirhackathon.preselection.models.RequestParameters;
 import com.getirhackathon.preselection.models.ShapeProperties;
 import com.getirhackathon.preselection.networks.VolleyRequest;
 import com.getirhackathon.preselection.utils.CustomView;
-import com.getirhackathon.preselection.utils.RandomCircles;
 import com.google.gson.Gson;
 
 import org.json.JSONException;

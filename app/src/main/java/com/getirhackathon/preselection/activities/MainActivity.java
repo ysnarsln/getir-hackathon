@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.view.MenuItem;
 
 import com.getirhackathon.preselection.R;
-import com.getirhackathon.preselection.fragments.RetrofitFragment;
 import com.getirhackathon.preselection.fragments.VolleyFragment;
 
 public class MainActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
@@ -27,7 +26,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         mBottomNavigationView.setOnNavigationItemSelectedListener(this);
 
         if(savedInstanceState == null){
-            Fragment fragment = new RetrofitFragment();
+            Fragment fragment = new VolleyFragment();
             fragmentManager.beginTransaction()
                     .add(R.id.main_container, fragment, MainActivity.class.getCanonicalName())
                     .commit();
@@ -38,9 +37,6 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()){
-            case R.id.action_retrofit:
-                replaceFragment(new RetrofitFragment());
-                break;
             case R.id.action_volley:
                 replaceFragment(new VolleyFragment());
                 break;

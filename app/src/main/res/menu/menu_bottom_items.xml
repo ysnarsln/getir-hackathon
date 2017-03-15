@@ -2,15 +2,9 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/action_retrofit"
-        android:enabled="true"
-        android:icon="@drawable/ic_directions_run_white"
-        android:title="Retrofit"
-        app:showAsAction="ifRoom" />
-    <item
         android:id="@+id/action_volley"
         android:enabled="true"
-        android:icon="@drawable/ic_pool_white"
+        android:icon="@drawable/ic_directions_run_white"
         android:title="Volley"
         app:showAsAction="ifRoom" />
 </menu>
